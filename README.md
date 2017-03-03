@@ -2,7 +2,7 @@
 These R scripts create an application (through ShinyApp) to visualize and manipulate survey results from 
 various CSV files. CSV files are read into the program via the code:
 ```
-datafile <- read.csv("file_name_here")
+datafile <- read_csv("file_name_here")
 ```
 Since the CSV file being analyzed in this use of the code is located within the same directory as the R scripts, 
 only the file name, and not the full path to the data file, is required in order to read the CSV file.
