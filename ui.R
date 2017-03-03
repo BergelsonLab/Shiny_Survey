@@ -30,7 +30,7 @@ shinyUI(fluidPage(
                   choices = Vchoices, selected = 5,
                   multiple = FALSE)
     ),
-    
+  
     # Show a plot of the generated distribution
     mainPanel(
       h2("Survey Results", align = "center"),
