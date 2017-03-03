@@ -18,7 +18,6 @@ shinyServer(function(input, output) {
     }
   })
   
-  
   datafile2 <- read_csv("final_cdi_merged_cleaned.csv")
   observeEvent(input$scatChoices, {
     colorVar <- as.numeric(input$color_var)
