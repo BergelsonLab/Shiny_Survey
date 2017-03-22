@@ -1,8 +1,31 @@
 library(shiny)
+library(DT)
+library(tidyverse)
+library(ggplot2)
 
-datafile <- read_csv("final_cdi_merged_cleaned.csv")
+
+datafile1 <- read.csv("final_cdi_merged_cleaned.csv")
+
+datafile <- mutate(datafile1,
+                   Fraction_Total_Understand = rowSums(datafile1[,c(17:47, 50:445)] > 0 & 
+                                                datafile1[,c(17:47, 50:445)] < 2),
+                   Fraction_Total_Talk = rowSums(datafile1[,50:445] > 1))
+
+
 Vchoices <- 1:ncol(datafile)
 names(Vchoices) <- names(datafile)
+
+sumChoices <- select(datafile, Understand_childname:Talk_some)
+
+#mutate(datafile,from columns 17-445
+#       Understand_Sum = ##Sum add if column name starts with "Understand"
+                        ## and value = "Sometimes" or "Often" or 1 or "Yes"
+                        ## or if column name starts with "Talk" and value 
+                        ## = 1,
+#       Talk_Sum = ##Sum add if column name starts with "Talk" and value 
+                  ## = 2,
+#       Gesture_Sum = ##Sum add if column name starts with "Gestures" and
+                      ##Value = "Yes")
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
@@ -27,7 +50,7 @@ shinyUI(fluidPage(
       helpText("Select the variable with respect to which the scatter plot colors
                will be filtered."),
       selectInput("color_var", label = "Select Variable for Plot Color Scale:",
-                  choices = Vchoices, selected = 5,
+                  choices = Vchoices, selected = 4,
                   multiple = FALSE)
     ),
   
@@ -35,7 +58,7 @@ shinyUI(fluidPage(
     mainPanel(
       h2("Survey Results", align = "center"),
       DT::dataTableOutput("table"),
-      plotOutput("scat", height = 500)
+      plotOutput("plot", height = 500)
     )
   )
 ))
