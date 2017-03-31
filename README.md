@@ -9,13 +9,20 @@ only the file name, and not the full path to the data file, is required in order
 
 #Usage ui.r Script
 ui.r creates the template of the app with a side bar panel and various text boxes and drop down menus that enable the user to 
-select which columns from the CSV file to display in the table and graph.  Furthermore, the datafile is altered at the start of the ui.r script using the "mutate" function.  This creates 2 additional columns for the csv that track the total number of words understood and spoken by each subject.  Vchoices is the variable that contains the names of the columns and is used in each "selectInput" function.  
+select which columns from the CSV file to display in the table and graph.  Furthermore, the datafile is altered at the start of the ui.r script using the "ifelse" and "mutate" functions.  The "ifelse" function converts values of "No" to "0" and values of "Yes" to "1," which is necessary in order to track the total number of words understood, spoken, and gestures made.  The "mutate" function creates 3 additional columns for the csv that track the total number of words understood by each subject, the total number of words spoken by each subject, and the total gestures made by each subject.  Furthermore, the "radioButton" widget in the sidebar panel enables the user to select which variable to analyze, whether it be understood, spoken, or gestures.  Based on what the user selects, the dropdown menus for the table and plot outputs will display the words and phrases that paired with either "understand," "talk," or "gestures."  This was accomplished using the "conditionalPanel()" function where the condition is based on the "radioButton" input. 
 
 ```
-Vchoices <- 1:ncol(datafile)
-selectInput("colChoices", label = "Select Columns for Data Table: ",
-                  choices = Vchoices,
-                  multiple = TRUE)
+datafile <- mutate(datafile1,
+                   Fraction_Total_Understand = rowSums(datafile1[,c(17:47, 50:445)] == 1)/425,
+                   Fraction_Total_Talk = rowSums(datafile1[,50:445] > 1)/395,
+                   Fraction_Total_Gesture = rowSums(datafile1[,458:508])/51)
+                   
+radioButtons("radioButton", label = "Select set of words/phrases: ",
+                         choices = list("Understand" = 1, "Talk" = 2, "Gestures" = 3)),
+
+conditionalPanel(
+        condition = "input.radioButton == 1",
+        ...)
 ```
 The main panel code block that is at located the bottom of ui.r is where the table and graph that the app displays 
 are initialized.
@@ -23,18 +30,17 @@ are initialized.
 #Usage server.r Script
 server.r uses the input from the user to create and display the reactive data table and graph in the application window.
 The code "input$" followed by the id from one of the selectInput functions from ui.r, such as "colChoices", 
-instructs the app to use this input in creating the table or graph.  the code "observeEvent" causes the application 
-to recreate the output table or graph each time the input$ is altered by the user, keeping the visual display of data 
-representative of the variables selected by the user.  "colChoices" impacts the variables displayed in the table, "plotChoices"
-impacts the variables represented in the graph (whether it is a scatter plot or a bar chart), "color_var" changes the variable off which the graph's colors are based. 
+instructs the app to use this input in creating the table or graph.  the reactive part of the code is based on the radio button input and causes the application to recreate the output table or graph each time the input$ is altered by the user, keeping the visual display of data representative of the variables selected by the user.  "colChoices_understand/talk/gestures" impacts the variables displayed in the table, "plotChoices_understand/talk/gestures" impacts the variables represented in the graph (whether it is a scatter plot or a bar chart), "color_var_understand/talk/gestures" changes the variable off which the graph's colors are based. 
 ```
-observeEvent(input$colChoices...
-observeEvent(input$scatChoices...
-observeEvent(input$color_var...
+x <- reactive({input$radioButton})
+output$plot<-renderPlot({
+    if(x() == 1){...
+    if(x() == 2){...
+    if(x() == 3){...
 ```
-The graph depicted will either be a scatter plot or a bar chart based on the variable selected by the user.  If the user selects either "Fraction_Total_Understand" or "Fraction_Total_Talk", the graph will display a scatter plot.  However, if the user wishes to visualize specific phrases and words, a bar chart will be displayed, providing a better representation of the data.
+The graph depicted will either be a scatter plot or a bar chart based on the variable selected by the user.  If the user selects either "Fraction_Total_Understand", "Fraction_Total_Talk", or "Fraction_Total_Gestures", the graph will display a scatter plot.  However, if the user wishes to visualize specific phrases and words, a bar chart will be displayed, providing a better representation of the data.
 
-Inside each "observeEvent" block of code, the inputs are used (as.numeric in order to be used to access columns from the CSV 
+Inside each block of code, the inputs are used (as.numeric in order to be used to access columns from the CSV 
 file based on column number) to actually create the table and graph using the code: 
 ```
 output$table = DT::renderDataTable(datafile[,cols], filter = "top")
@@ -66,26 +72,9 @@ example, if the app is saved in a directory called my_app, executing the followi
 > library(shiny)
 > runApp("my_app")
 ```
-After the application is launched, the display screen will show the sidebar panel with three locations for the user to 
-select inputs labeled "Select Columns for Data Table:", "Select Variables for Plot:", and "Select Variable for Plot Color:".  The user can select as many variables as he or she wishes to display in the data table by clicking the empty text box and selecting
-variables from the drop down menu. Furthermore, the table's columns can be sorted by using the filters located at the top of each column.  The user can select any two continuous variables to be displayed in the scatter plot.  If the user selects a variable with discrete values, such as strings and not integers, the app will display the error message below and no scatter plot will be produced:
-```
-Error: Discrete value supplied to continuous scale
-```
+After the application is launched, the display screen will show the sidebar panel with four locations for the user to 
+select inputs.  First, the user should select whether to analyze "Understand", "Talk", or "Gestures".  After selecting one of those three options, the user can input which variables he or she wishes to veiw in the data table and plot from the three drop down menus of word choices.  The user can select as many variables as he or she wishes to display in the data table by clicking the empty text box labeled "Select Columns for Data Table:" and selecting variables from the drop down menu. Furthermore, the table's columns can be sorted by using the filters located at the top of each column.  The user can select any two variables to be displayed in the scatter plot.
 It is suggested that the first variable selected (x-axis) for the plot be "AgeMonthCDI_Uncorrected" in order to produce the most informative and visually useful graph.
 
 Finally, the user can change the variable off which the color of the scatter plot points are based by selecting a different input from
-the third drop down menu labeled, "Select Variable for Plot Color Scale:".  Changing this variable will alter the color of the points or bars in the scatter plot or bar chart.
-
-
-
-
-
-
-
-
-
-
-
-
-
+the third drop down menu labeled, "Select Variable for Understand/Talk/Gestures Plot Color Scale:".  Changing this variable will alter the color of the points or bars in the scatter plot or bar chart.
