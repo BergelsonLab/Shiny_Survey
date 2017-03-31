@@ -15,8 +15,8 @@ datafile <- mutate(datafile1,
                    Fraction_Total_Talk = rowSums(datafile1[,50:445] > 1)/395,
                    Fraction_Total_Gesture = rowSums(datafile1[,458:508])/51)
 
-table_choices <- 1:ncol(datafile)
-names(table_choices) <- names(datafile)
+color_choices <- 1:ncol(datafile)
+names(color_choices) <- names(datafile)
 
 
 datafile_understand_table <- select(datafile, SubjectNumber_Month:AgeMonthCDI_Corrected,
@@ -103,7 +103,7 @@ shinyUI(fluidPage(
         helpText("Select the variable with respect to which the plot colors
                will be filtered."),
         selectInput("color_var_understand", label = "Select Variable for Understand Plot Color Scale:",
-                    choices = table_choices, selected = 4,
+                    choices = color_choices, selected = 4,
                     multiple = FALSE)),
       
       conditionalPanel(
@@ -116,7 +116,7 @@ shinyUI(fluidPage(
         helpText("Select the variable with respect to which the plot colors
                will be filtered."),
         selectInput("color_var_talk", label = "Select Variable for Talk Plot Color Scale:",
-                    choices = table_choices, selected = 4,
+                    choices = color_choices, selected = 4,
                     multiple = FALSE)),
       
       conditionalPanel(
@@ -129,7 +129,7 @@ shinyUI(fluidPage(
         helpText("Select the variable with respect to which the plot colors
                  will be filtered."),
         selectInput("color_var_gestures", label = "Select Variable for Gestures Plot Color Scale:",
-                    choices = table_choices, selected = 4,
+                    choices = color_choices, selected = 4,
                     multiple = FALSE))
     ),
   

@@ -9,13 +9,6 @@ for(n in names(datafile1[,c(17:19, 458:508)])){
   datafile1[[n]] <- ifelse(datafile1[[n]] == 'Yes',1,0)
 }
 
-dfile <- read.csv("final_cdi_merged_cleaned.csv")
-
-dfile1 <- mutate(dfile,
-                 Fraction_Total_Understand = rowSums(datafile1[,c(17:47, 50:445)] == 1)/425,
-                 Fraction_Total_Talk = rowSums(datafile1[,50:445] > 1)/395,
-                 Fraction_Total_Gesture = rowSums(datafile1[,458:508])/51)
-
 shinyServer(function(input, output) {
   datafile <- mutate(datafile1,
                      Fraction_Total_Understand = rowSums(datafile1[,c(17:47, 50:445)] == 1)/425,
@@ -54,12 +47,12 @@ shinyServer(function(input, output) {
         x_lab <- colnames(datafile_understand)[cols2[1]]
         y_lab <- colnames(datafile_understand)[cols2[2]]
         title <- paste(x_lab, "vs.", y_lab, sep = " ")
-        colorV <- colnames(dfile1)[colorVar]
+        colorV <- colnames(datafile)[colorVar]
         
         p <- ggplot(data = datafile_understand) +
           geom_point(mapping = aes(x = datafile_understand[cols2[1]],
                                    y = datafile_understand[cols2[2]],
-                                   color = dfile1[[colorV]]),
+                                   color = datafile[[colorV]]),
                      position = position_jitter(w = 0.2, h = 0.1),
                      alpha = .6) +
           stat_smooth(mapping = aes(x = datafile_understand[cols2[1]],
@@ -73,12 +66,12 @@ shinyServer(function(input, output) {
         x_lab <- colnames(datafile_understand)[cols2[1]]
         y_lab <- colnames(datafile_understand)[cols2[2]]
         title <- paste(x_lab, "vs.", y_lab, sep = " ")
-        colorV <- colnames(dfile1)[colorVar]
+        colorV <- colnames(datafile)[colorVar]
         
         p <- ggplot(data = datafile_understand) +
           geom_bar(mapping = aes(x = datafile_understand[cols2[1]],
                                  y = datafile_understand[cols2[2]],
-                                 color = dfile1[[colorV]]),
+                                 color = datafile[[colorV]]),
                    stat = "identity")+
           ggtitle(title)+
           theme(plot.title = element_text(hjust = 0.5))
@@ -113,12 +106,12 @@ shinyServer(function(input, output) {
         x_lab <- colnames(datafile_talk)[cols2[1]]
         y_lab <- colnames(datafile_talk)[cols2[2]]
         title <- paste(x_lab, "vs.", y_lab, sep = " ")
-        colorV <- colnames(dfile1)[colorVar]
+        colorV <- colnames(datafile)[colorVar]
         
         p <- ggplot(data = datafile_talk) +
           geom_point(mapping = aes(x = datafile_talk[cols2[1]],
                                    y = datafile_talk[cols2[2]],
-                                   color = dfile1[[colorV]]),
+                                   color = datafile[[colorV]]),
                      position = position_jitter(w = 0.2, h = 0.1),
                      alpha = .6) +
           stat_smooth(mapping = aes(x = datafile_talk[cols2[1]],
@@ -132,12 +125,12 @@ shinyServer(function(input, output) {
         x_lab <- colnames(datafile_talk)[cols2[1]]
         y_lab <- colnames(datafile_talk)[cols2[2]]
         title <- paste(x_lab, "vs.", y_lab, sep = " ")
-        colorV <- colnames(dfile1)[colorVar]
+        colorV <- colnames(datafile)[colorVar]
         
         p <- ggplot(data = datafile_talk) +
           geom_bar(mapping = aes(x = datafile_talk[cols2[1]],
                                  y = datafile_talk[cols2[2]],
-                                 color = dfile1[[colorV]]),
+                                 color = datafile[[colorV]]),
                    stat = "identity")+
           ggtitle(title)+
           theme(plot.title = element_text(hjust = 0.5))
@@ -171,12 +164,13 @@ shinyServer(function(input, output) {
         x_lab <- colnames(datafile_gesture)[cols2[1]]
         y_lab <- colnames(datafile_gesture)[cols2[2]]
         title <- paste(x_lab, "vs.", y_lab, sep = " ")
-        colorV <- colnames(dfile1)[colorVar]
+        colorV <- colnames(datafile)[colorVar]
 
+        
         p <- ggplot(data = datafile_gesture) +
           geom_point(mapping = aes(x = datafile_gesture[cols2[1]],
                                    y = datafile_gesture[cols2[2]],
-                                   color = dfile1[[colorV]]),
+                                   color = datafile[[colorV]]),
                      position = position_jitter(w = 0.2, h = 0.1),
                      alpha = .6) +
           stat_smooth(mapping = aes(x = datafile_gesture[cols2[1]],
@@ -190,12 +184,12 @@ shinyServer(function(input, output) {
         x_lab <- colnames(datafile_gesture)[cols2[1]]
         y_lab <- colnames(datafile_gesture)[cols2[2]]
         title <- paste(x_lab, "vs.", y_lab, sep = " ")
-        colorV <- colnames(dfile1)[colorVar]
+        colorV <- colnames(datafile)[colorVar]
 
         p <- ggplot(data = datafile_gesture) +
           geom_bar(mapping = aes(x = datafile_gesture[cols2[1]],
                                  y = datafile_gesture[cols2[2]],
-                                 color = dfile1[[colorV]]),
+                                 color = datafile[[colorV]]),
                    stat = "identity") +
           ggtitle(title)+
           theme(plot.title = element_text(hjust = 0.5))
