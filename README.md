@@ -1,4 +1,4 @@
-#Shiny_Survey
+# Shiny_Survey
 These R scripts create an application (through ShinyApp) to visualize and manipulate survey results from 
 CSV files. CSV files are read into the program via the code:
 ```
@@ -7,7 +7,7 @@ datafile <- read_csv("file_name_here")
 Since the CSV file being analyzed in this use of the code is located within the same directory as the R scripts, 
 only the file name, and not the full path to the data file, is required in order to read the CSV file.
 
-#Usage ui.r Script
+## Usage ui.r Script
 ui.r creates the template of the app with a side bar panel and various text boxes and drop down menus that enable the user to 
 select which columns from the CSV file to display in the table and graph.  Furthermore, the datafile is altered at the start of the ui.r script using the "ifelse" and "mutate" functions.  The "ifelse" function converts values of "No" to "0" and values of "Yes" to "1," which is necessary in order to track the total number of words understood, spoken, and gestures made.  The "mutate" function creates 3 additional columns for the csv that track the total number of words understood by each subject, the total number of words spoken by each subject, and the total gestures made by each subject.  Furthermore, the "radioButton" widget in the sidebar panel enables the user to select which variable to analyze, whether it be understood, spoken, or gestures.  Based on what the user selects, the dropdown menus for the table and plot outputs will display the words and phrases that paired with either "understand," "talk," or "gestures."  This was accomplished using the "conditionalPanel()" function where the condition is based on the "radioButton" input. 
 
@@ -27,7 +27,7 @@ conditionalPanel(
 The main panel code block that is at located the bottom of ui.r is where the table and graph that the app displays 
 are initialized.
 
-#Usage server.r Script
+## Usage server.r Script
 server.r uses the input from the user to create and display the reactive data table and graph in the application window.
 The code "input$" followed by the id from one of the selectInput functions from ui.r, such as "colChoices", 
 instructs the app to use this input in creating the table or graph.  the reactive part of the code is based on the radio button input and causes the application to recreate the output table or graph each time the input$ is altered by the user, keeping the visual display of data representative of the variables selected by the user.  "colChoices_understand/talk/gestures" impacts the variables displayed in the table, "plotChoices_understand/talk/gestures" impacts the variables represented in the graph (whether it is a scatter plot or a bar chart), "color_var_understand/talk/gestures" changes the variable off which the graph's colors are based. 
@@ -53,7 +53,7 @@ p <- ggplot(data = datafile2) +
 "DT::renderDataTable" creates the table while "ggplot" is used to create the graphs.  Both the DT and ggplot2 libraries are
 imported at the top of server.r. 
 
-#Using the App
+## Using the App
 Before being able to run the appliction, you must make sure that all of the R libraries used in the code are installed.  
 These libraries include shiny, DT, tidyverse, and ggplot2.  In order to install these libraries, simply run the following
 code in your console:
