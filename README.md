@@ -1,6 +1,6 @@
 #Shiny_Survey
 These R scripts create an application (through ShinyApp) to visualize and manipulate survey results from 
-various CSV files. CSV files are read into the program via the code:
+CSV files. CSV files are read into the program via the code:
 ```
 datafile <- read_csv("file_name_here")
 ```
@@ -9,8 +9,7 @@ only the file name, and not the full path to the data file, is required in order
 
 #Usage ui.r Script
 ui.r creates the template of the app with a side bar panel and various text boxes and drop down menus that enable the user to 
-select which columns from the CSV file to display in the table and graph.  Vchoices is the 
-variable that contains the names of the columns and is used in each "selectInput" function.  
+select which columns from the CSV file to display in the table and graph.  Furthermore, the datafile is altered at the start of the ui.r script using the "mutate" function.  This creates 2 additional columns for the csv that track the total number of words understood and spoken by each subject.  Vchoices is the variable that contains the names of the columns and is used in each "selectInput" function.  
 
 ```
 Vchoices <- 1:ncol(datafile)
@@ -22,18 +21,19 @@ The main panel code block that is at located the bottom of ui.r is where the tab
 are initialized.
 
 #Usage server.r Script
-server.r uses the input from the user to create and display the reactive data table and graph in the app.
+server.r uses the input from the user to create and display the reactive data table and graph in the application window.
 The code "input$" followed by the id from one of the selectInput functions from ui.r, such as "colChoices", 
-tells the app to use this input in creating the table or graph.  the code "observeEvent" causes the application 
+instructs the app to use this input in creating the table or graph.  the code "observeEvent" causes the application 
 to recreate the output table or graph each time the input$ is altered by the user, keeping the visual display of data 
-representative of the variables selected by the user.  "colChoices" impacts the variables displayed in the table, "scatChoices"
-impacts the variables represented in the scatter plot, "color_var" changes the variable off which the scatter plot point colors
-are based. 
+representative of the variables selected by the user.  "colChoices" impacts the variables displayed in the table, "plotChoices"
+impacts the variables represented in the graph (whether it is a scatter plot or a bar chart), "color_var" changes the variable off which the graph's colors are based. 
 ```
 observeEvent(input$colChoices...
 observeEvent(input$scatChoices...
 observeEvent(input$color_var...
 ```
+The graph depicted will either be a scatter plot or a bar chart based on the variable selected by the user.  If the user selects either "Fraction_Total_Understand" or "Fraction_Total_Talk", the graph will display a scatter plot.  However, if the user wishes to visualize specific phrases and words, a bar chart will be displayed, providing a better representation of the data.
+
 Inside each "observeEvent" block of code, the inputs are used (as.numeric in order to be used to access columns from the CSV 
 file based on column number) to actually create the table and graph using the code: 
 ```
@@ -44,7 +44,7 @@ p <- ggplot(data = datafile2) +
                                    y = datafile2[cols2[2]],
                                    color = datafile2[colorVar])
 ```
-"DT::renderDataTable" creates the table while "ggplot" is used to create the scatter plot.  Both the DT and ggplot2 libraries are
+"DT::renderDataTable" creates the table while "ggplot" is used to create the graphs.  Both the DT and ggplot2 libraries are
 imported at the top of server.r. 
 
 #Using the App
@@ -67,18 +67,15 @@ example, if the app is saved in a directory called my_app, executing the followi
 > runApp("my_app")
 ```
 After the application is launched, the display screen will show the sidebar panel with three locations for the user to 
-select inputs labeled "Select Columns for Data Table:", "Select Variables for Scatter Plot:", and "Select Variable for Plot Color 
-Scale:".  The user can select as many variables as he or she wishes to display in the data table by clicking the empty text box and selecting
-variables from the drop down menu. Furthermore, the table can be sorted by using the filters located at the top of each column.  The 
-user can select any two continuous variables to be displayed in the scatter plot.  If the user selects a variable with discrete values,
-such as strings and not integers, the app will display the error message below and no scatter plot will be produced:
+select inputs labeled "Select Columns for Data Table:", "Select Variables for Plot:", and "Select Variable for Plot Color:".  The user can select as many variables as he or she wishes to display in the data table by clicking the empty text box and selecting
+variables from the drop down menu. Furthermore, the table's columns can be sorted by using the filters located at the top of each column.  The user can select any two continuous variables to be displayed in the scatter plot.  If the user selects a variable with discrete values, such as strings and not integers, the app will display the error message below and no scatter plot will be produced:
 ```
 Error: Discrete value supplied to continuous scale
 ```
-Finally, the user can change the variable off which the color of the scatter plot points are based by selecting a different input from
-the third drop down menu labeled, "Select Variable for Plot Color Scale:".  Changing this variable will alter the color of the points in
-the scatter plot and also must be continuous. 
+It is suggested that the first variable selected (x-axis) for the plot be "AgeMonthCDI_Uncorrected" in order to produce the most informative and visually useful graph.
 
+Finally, the user can change the variable off which the color of the scatter plot points are based by selecting a different input from
+the third drop down menu labeled, "Select Variable for Plot Color Scale:".  Changing this variable will alter the color of the points or bars in the scatter plot or bar chart.
 
 
 
