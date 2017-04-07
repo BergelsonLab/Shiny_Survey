@@ -56,11 +56,13 @@ shinyServer(function(input, output) {
           filename = "Seedling_Filtered_Understand_Data.csv",
           content = function(file_out){
             s = input$table_rows_all
-            write.csv(datafile_understand_table[s, ,drop = FALSE], file_out)
+            write.csv(datafile_understand_table[s,cols,drop = FALSE], file_out)
           }
         )
       }
       else{
+        df <- data.frame(datafile_understand_table[,cols])
+        names(df) <- names(datafile_understand_table)[cols]
         output$table <- DT::renderDataTable(datafile_understand_table[,cols], filter = "top")
         # Allow user to download csv file of understand data that has been filtered
         # Filters determined by user on application table output
@@ -68,7 +70,7 @@ shinyServer(function(input, output) {
           filename = "Seedling_Filtered_Understand_Data.csv",
           content = function(file_out){
             s = input$table_rows_all
-            write.csv(datafile_understand_table[s, ,drop = FALSE], file_out)
+            write.csv(datafile_understand_table[s,cols , drop = FALSE], file_out)
           }
         )
       }
@@ -149,7 +151,7 @@ shinyServer(function(input, output) {
           filename = "Seedling_Filtered_Talk_Data.csv",
           content = function(file_out){
             s = input$table_rows_all
-            write.csv(datafile_talk_table[s, ,drop = FALSE], file_out)
+            write.csv(datafile_talk_table[s,cols,drop = FALSE], file_out)
           }
         )
       }
@@ -161,7 +163,7 @@ shinyServer(function(input, output) {
           filename = "Seedling_Filtered_Talk_Data.csv",
           content = function(file_out){
             s = input$table_rows_all
-            write.csv(datafile_talk_table[s, ,drop = FALSE], file_out)
+            write.csv(datafile_talk_table[s,cols,drop = FALSE], file_out)
           }
         )
       }
@@ -242,7 +244,7 @@ shinyServer(function(input, output) {
           filename = "Seedling_Filtered_Gestures_Data.csv",
           content = function(file_out){
             s = input$table_rows_all
-            write.csv(datafile_gesture_table[s, ,drop = FALSE], file_out)
+            write.csv(datafile_gesture_table[s,cols,drop = FALSE], file_out)
           }
         )
       }
@@ -254,7 +256,7 @@ shinyServer(function(input, output) {
           filename = "Seedling_Filtered_Gestures_Data.csv",
           content = function(file_out){
             s = input$table_rows_all
-            write.csv(datafile_gesture_table[s, ,drop = FALSE], file_out)
+            write.csv(datafile_gesture_table[s,cols,drop = FALSE], file_out)
           }
         )
       }
