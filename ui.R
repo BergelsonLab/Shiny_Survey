@@ -93,6 +93,7 @@ shinyUI(fluidPage(
   # 1st Download Button and Radio Button remain present regardless of user input
   sidebarLayout(
     sidebarPanel(
+      ####### fileInput("csv_file", "Choose CSV File", accept = ".csv"),
       # Help text describes what the following widget does and what the user should do
       helpText("Download data to a csv file containing 'understand,' 'talk,' and 'gestures,' information:"),
       # Create button to download csv file from the app to user's local machine.
@@ -118,7 +119,8 @@ shinyUI(fluidPage(
                     multiple = TRUE),
         # User can download subset of data containing only "understand" information
         # From datafile_understand_table
-        helpText("Download the filtered data to csv file"),
+        helpText("Download the filtered data from datatable to csv file.  If no columns selected in above data field,
+                 full 'Understand' dataset will be downloaded."),
         downloadButton("down_filter_understand", "Download Filtered Data")),
       
       conditionalPanel(
@@ -133,7 +135,8 @@ shinyUI(fluidPage(
                     multiple = TRUE),
         # User can download subset of data containing only "talk" information
         # From datafile_talk_table"
-        helpText("Download the filtered data to csv file"),
+        helpText("Download the filtered data from datatable to csv file. If no columns selected in above data field,
+                 full 'Talk' dataset will be downloaded."),
         downloadButton("down_filter_talk", "Download Filtered Data")),
 
       conditionalPanel(
@@ -148,7 +151,8 @@ shinyUI(fluidPage(
                     multiple = TRUE),
         # User can download subset of data containing only "gestures" information
         # From datafile_gestures_table"
-        helpText("Download the filtered data to csv file"),
+        helpText("Download the filtered data from datatable to csv file. If no columns selected in above data field,
+                 full 'Gestures' dataset will be downloaded."),
         downloadButton("down_filter_gesture", "Download Filtered Data")),
       
       br(),

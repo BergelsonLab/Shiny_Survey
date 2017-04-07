@@ -46,7 +46,16 @@ shinyServer(function(input, output) {
       cols <- as.numeric(input$colChoices_understand)
       
       #Display the table based on column choices from user 
-      if(length(input$colChoices_understand) == 1){
+      if(length(input$colChoices_understand) == 0){
+        # Allow user to download csv file of all the understand data
+        output$down_filter_understand <- downloadHandler(
+          filename = "Seedling_Filtered_Understand_Data.csv",
+          content = function(file_out){
+            write.csv(datafile_understand_table, file_out)
+          }
+        )
+      }
+      else if(length(input$colChoices_understand) == 1){
         df <- data.frame(datafile_understand_table[,cols])
         names(df) <- names(datafile_understand_table)[cols]
         output$table <- DT::renderDataTable(df, filter = "top")
@@ -60,7 +69,7 @@ shinyServer(function(input, output) {
           }
         )
       }
-      else{
+      else if(length(input$colChoices_understand) > 1){
         df <- data.frame(datafile_understand_table[,cols])
         names(df) <- names(datafile_understand_table)[cols]
         output$table <- DT::renderDataTable(datafile_understand_table[,cols], filter = "top")
@@ -141,7 +150,17 @@ shinyServer(function(input, output) {
       cols <- as.numeric(input$colChoices_talk)
       
       # Display the table based on column choices from user
-      if(length(input$colChoices_talk) == 1){
+      if(length(input$colChoices_talk) == 0){
+        # Allow user to download csv file of all the understand data
+        output$down_filter_talk <- downloadHandler(
+          filename = "Seedling_Filtered_Talk_Data.csv",
+          content = function(file_out){
+            write.csv(datafile_talk_table, file_out)
+          }
+        )
+      }
+      
+      else if(length(input$colChoices_talk) == 1){
         df <- data.frame(datafile_talk_table[,cols])
         names(df) <- names(datafile_talk_table)[cols]
         output$table = DT::renderDataTable(df, filter = "top")
@@ -155,7 +174,7 @@ shinyServer(function(input, output) {
           }
         )
       }
-      else{
+      else if(length(input$colChoices_talk) > 1){
         output$table = DT::renderDataTable(datafile_talk_table[,cols], filter = "top")
         # Allow user to download csv file of understand data that has been filtered
         # Filters determined by user on application table output
@@ -234,7 +253,16 @@ shinyServer(function(input, output) {
       cols <- as.numeric(input$colChoices_gesture)
       
       # Display the table based on column choices from user
-      if(length(input$colChoices_gesture) == 1){
+      if(length(input$colChoices_gesture) == 0){
+        # Allow user to download csv file of all the understand data
+        output$down_filter_gesture <- downloadHandler(
+          filename = "Seedling_Filtered_Gestures_Data.csv",
+          content = function(file_out){
+            write.csv(datafile_gesture_table, file_out)
+          }
+        )
+      }
+      else if(length(input$colChoices_gesture) == 1){
         df <- data.frame(datafile_gesture_table[,cols])
         names(df) <- names(datafile_gesture_table)[cols]
         output$table = DT::renderDataTable(df, filter = "top")
@@ -248,7 +276,7 @@ shinyServer(function(input, output) {
           }
         )
       }
-      else{
+      else if(length(input$colChoices_gesture) > 1){
         output$table = DT::renderDataTable(datafile_gesture_table[,cols], filter = "top")
         # Allow user to download csv file of understand data that has been filtered
         # Filters determined by user on application table output
