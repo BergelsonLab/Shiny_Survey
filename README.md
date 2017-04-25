@@ -1,6 +1,6 @@
 # Shiny_Survey
 These R scripts create an application (through ShinyApp) to visualize and manipulate survey results from 
-CSV files. CSV files are read into the program via the code:
+CDI Surveys and Motor Surveys stored in CSV files. CSV files are read into the program via the code:
 ```
 datafile1 <- read.csv("file_name_here")
 datafile2 <- read.csv("other_file_name")
